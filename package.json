@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
+    "start": "node server/index.js",
     "server": "node server/index.js",
     "server:dev": "nodemon server/index.js",
-    "build": "vite build",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
