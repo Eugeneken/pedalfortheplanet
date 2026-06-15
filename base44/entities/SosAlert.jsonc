@@ -1,0 +1,46 @@
+{
+  "name": "SosAlert",
+  "type": "object",
+  "properties": {
+    "rider_name": {
+      "type": "string",
+      "description": "Name of the rider"
+    },
+    "rider_phone": {
+      "type": "string",
+      "description": "Phone number of the rider"
+    },
+    "route_km": {
+      "type": "string",
+      "description": "Route the rider is on"
+    },
+    "route_name": {
+      "type": "string",
+      "description": "Route name"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude"
+    },
+    "maps_url": {
+      "type": "string",
+      "description": "Google Maps link"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "resolved"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "route_name",
+    "status"
+  ]
+}

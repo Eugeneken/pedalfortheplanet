@@ -1,0 +1,78 @@
+{
+  "name": "Registration",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Full name of the registrant"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "M-PESA phone number"
+    },
+    "route_km": {
+      "type": "string",
+      "enum": [
+        "5",
+        "16",
+        "25"
+      ],
+      "description": "Selected route distance"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "Individual",
+        "Family of 4"
+      ],
+      "description": "Registration package"
+    },
+    "tshirt_size": {
+      "type": "string",
+      "enum": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "description": "T-shirt size"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid"
+      ],
+      "default": "pending"
+    },
+    "bib_number": {
+      "type": "string",
+      "description": "Assigned bib number"
+    },
+    "checkout_request_id": {
+      "type": "string",
+      "description": "Pesapal order tracking ID for payment reconciliation"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude coordinate of the rider"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude coordinate of the rider"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "phone",
+    "route_km",
+    "tier"
+  ]
+}
