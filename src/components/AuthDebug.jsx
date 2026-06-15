@@ -20,7 +20,7 @@ export default function AuthDebug() {
     if (!import.meta.env.DEV && urlDebug !== 'true') return null;
   }
 
-  const localStorageToken = typeof window !== 'undefined' ? (localStorage.getItem('base44_access_token') || localStorage.getItem('token')) : null;
+  const localStorageToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
   return (
     <div className="fixed right-4 bottom-4 w-96 z-50 shadow-lg">
