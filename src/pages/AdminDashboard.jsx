@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
 import { ROUTE_CONFIG, EVENT_NAME, EVENT_DATE, EVENT_LOCATION } from "@/lib/routeData";
 import { Bike, Users, MapPin, Flag, Shield, LogOut, Calendar, AlertTriangle, CheckCircle2, ExternalLink, RefreshCw, Download } from "lucide-react";
@@ -12,8 +13,7 @@ const ROUTE_KM_CONFIG = {
 };
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, isLoadingAuth, logout } = useAuth();
   const [unauthorized, setUnauthorized] = useState(false);
   const [registrations, setRegistrations] = useState([]);
   const [sosAlerts, setSosAlerts] = useState([]);
@@ -21,23 +21,27 @@ export default function AdminDashboard() {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    base44.auth.me()
-      .then((u) => {
-        if (!u || u.role !== "admin") { setUnauthorized(true); }
-        else { setUser(u); loadData(); }
-        setLoading(false);
-      })
-      .catch(() => base44.auth.redirectToLogin("/admin"));
-  }, []);
+    if (!isLoadingAuth) {
+      if (!isAuthenticated || user?.role !== "admin") {
+        setUnauthorized(true);
+      } else {
+        loadData();
+      }
+    }
+  }, [isAuthenticated, isLoadingAuth, user]);
 
   const loadData = async () => {
     setRefreshing(true);
-    const [regs, sos] = await Promise.all([
-      base44.entities.Registration.list("-created_date", 200),
-      base44.entities.SosAlert.list("-created_date", 50),
-    ]);
-    setRegistrations(regs);
-    setSosAlerts(sos);
+    try {
+      const [regs, sos] = await Promise.all([
+        base44.entities.Registration.list("-created_date", 200),
+        base44.entities.SosAlert.list("-created_date", 50),
+      ]);
+      setRegistrations(regs);
+      setSosAlerts(sos);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    }
     setRefreshing(false);
   };
 
@@ -57,7 +61,7 @@ export default function AdminDashboard() {
       r.tshirt_size || "",
       r.payment_status,
       r.bib_number || "",
-      new Date(r.created_date).toLocaleDateString("en-KE"),
+      new Date(r.createdAt).toLocaleDateString("en-KE"),
     ]);
 
     const csvContent = [headers, ...rows]
@@ -74,11 +78,11 @@ export default function AdminDashboard() {
   };
 
   const markAsPaid = async (id) => {
-    await base44.entities.Registration.update(id, { payment_status: "paid" });
-    setRegistrations(prev => prev.map(r => r.id === id ? { ...r, payment_status: "paid" } : r));
+    await base44.entities.Registration.update(id, { payment_status: "completed" });
+    setRegistrations(prev => prev.map(r => r.id === id ? { ...r, payment_status: "completed" } : r));
   };
 
-  if (loading) return (
+  if (isLoadingAuth) return (
     <div className="fixed inset-0 flex items-center justify-center bg-background">
       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
